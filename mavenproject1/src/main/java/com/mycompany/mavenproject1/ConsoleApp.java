@@ -509,9 +509,9 @@ public class ConsoleApp {
         for (TipoDocumento req : conv.getRequisitos()) {
             System.out.print("  - " + req);
             if (t.getDocumentos().containsKey(req))
-                System.out.println(" ✓ (Archivo: " + t.getDocumentos().get(req).getNombreArchivo() + ")");
+                System.out.println(" (Archivo: " + t.getDocumentos().get(req).getNombreArchivo() + ")");
             else
-                System.out.println(" ✗ (Pendiente)");
+                System.out.println(" (Pendiente)");
         }
     }
 

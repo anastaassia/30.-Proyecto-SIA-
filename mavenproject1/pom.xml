@@ -8,6 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>26</maven.compiler.release>
-        <exec.mainClass>com.mycompany.mavenproject1.Mavenproject1</exec.mainClass>
+        <!-- Aquí está el cambio. Ahora apunta a tu clase Main -->
+        <exec.mainClass>com.mycompany.mavenproject1.Main</exec.mainClass>
     </properties>
 </project>
