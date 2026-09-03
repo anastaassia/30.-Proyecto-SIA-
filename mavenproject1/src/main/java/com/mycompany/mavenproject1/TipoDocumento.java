@@ -1,13 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.mavenproject1;
 
-/**
- *
- * @author 56940
- */
-public class TipoDocumento {
-    
+public enum TipoDocumento 
+{
+    CERT_NACIMIENTO,
+    CERT_ALUMNO_REGULAR,
+    PASAPORTE,
+    CERTIFICADO_NOTAS,
+    CARTA_MOTIVACION,
+    CV,
+    CERTIFICADO_IDIOMA    
 }

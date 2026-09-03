@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.mavenproject1;
-
-/**
- *
- * @author 56940
- */
-public class TramiteNoEncontradoException {
-    
+public class TramiteNoEncontradoException extends Exception {
+    public TramiteNoEncontradoException(String idTramite) {
+        super("No se encontró el trámite con ID: " + idTramite);
+    }
 }
+

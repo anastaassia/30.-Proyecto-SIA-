@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject3;
+package com.mycompany.mavenproject1;
 import java.util.*;
 
 public class Control
