@@ -1,137 +1,47 @@
-# Sistema de Gestión de Intercambio Estudiantil
-Gestión de Programas de Intercambio Estudiantil: Administración de convenios internacionales, registro de estudiantes, y manejo de trámites y documentación.
+# Proyecto SIA - Sistema de Gestión de Intercambio Estudiantil
 
-## Requisitos
-- **Java JDK 11+** (recomendado 17)
-- **Apache Maven 3.8+**
-- (Opcional) **NetBeans / IntelliJ / VS Code** para ejecución desde IDE
+Este repositorio contiene el código fuente del **Proyecto SIA**, un sistema desarrollado en Java diseñado para administrar programas de intercambio estudiantil. La aplicación facilita el seguimiento de postulaciones, gestión de colecciones de datos y control de requisitos para estudiantes.
 
-Verifica versiones:
-~~~
-java -version
-mvn -v
-~~~
+## Características Principales
 
-## Estructura del proyecto
-- **Paquete principal:** `com.mycompany.mavenproject3`
-- **Clase de entrada:** `com.mycompany.mavenproject3.Main`
-- **Persistencia:** En memoria (no usa BD). Al cerrar el programa, se pierde el estado.
+* **Gestión de Entidades:** Administración completa de estudiantes (`Estudiante.java`), convenios institucionales (`Convenio.java`) y trámites (`Tramite.java`).
+* **Control de Documentos:** Sistema integrado para el registro de archivos subidos (`DocumentoSubido.java`), el cual incorpora manejo de excepciones personalizadas, como `DocumentoDuplicadoException`, para proteger la integridad de las postulaciones y evitar redundancias.
+* **Interfaz Gráfica (GUI):** Incluye una aplicación visual dividida en paneles modulares (como `PanelGestionEstudiantes`, `PanelGestionConvenios`, `PanelTramites` y `PanelRequisitos`) centralizados en una `VentanaPrincipal`.
+* **Persistencia de Datos:** La información del sistema se guarda y recupera de manera local mediante archivos CSV almacenados en el directorio `data/` (`estudiantes.csv`, `convenios.csv`, `documentos.csv`, `tramites.csv`) a través del gestor `DataStore.java`.
+* **Alternativa de Consola:** El sistema también cuenta con una interfaz de línea de comandos a través de `ConsoleApp.java`.
 
-Estructura de carpetas esperada:
-~~~
-src/
- └─ main/
-     └─ java/
-         └─ com/
-             └─ mycompany/
-                 └─ intercambioEstudiantil/
-                     ├─ Main.java
-                     ├─ Control.java
-                     ├─ Estudiante.java
-                     ├─ Convenio.java
-                     ├─ Tramite.java
-                     ├─ DocumentoSubido.java
-                     └─ TipoDocumento.java
-pom.xml
-~~~
+## Estructura del Proyecto
 
-## Instalación
-1. Clona o descarga el repositorio.
-2. Abre una terminal en la carpeta del proyecto (donde está `pom.xml`).
-3. (Si hace falta) añade o revisa los plugins en `pom.xml`:
+El proyecto utiliza **Maven** para la gestión de dependencias y la construcción del software. La estructura de directorios es la siguiente:
 
-~~~xml
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.11.0</version>
-      <configuration>
-        <source>11</source>
-        <target>11</target>
-      </configuration>
-    </plugin>
+```text
+30.-Proyecto-SIA--main/
+├── mavenproject1/
+│   ├── pom.xml                  # Archivo de configuración de Maven
+│   ├── data/                    # Archivos de persistencia de datos
+│   │   ├── convenios.csv        
+│   │   ├── documentos.csv      
+│   │   ├── estudiantes.csv     
+│   │   └── tramites.csv        
+│   └── src/main/java/com/mycompany/mavenproject1/
+│       ├── Main.java / ConsoleApp.java      # Puntos de ejecución
+│       ├── Control.java / DataStore.java    # Lógica de controladores y datos
+│       ├── Modelos                          # Estudiante, Convenio, Tramite, etc.
+│       ├── Excepciones                      # EstudianteNoEncontradoException, etc.
+│       └── Componentes Visuales             # VentanaPrincipal y clases Panel*.java
+```
 
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>exec-maven-plugin</artifactId>
-      <version>3.1.0</version>
-      <configuration>
-        <mainClass>com.mycompany.mavenproject3.Main</mainClass>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
-~~~
+## Requisitos Previos
 
-> **Tip**: Si prefieres un `.jar` ejecutable, agrega `maven-shade-plugin` para empaquetar todo y usar `java -jar`.
+* **Java Development Kit (JDK)** instalado en el sistema.
+* **Apache Maven** para la compilación y gestión del proyecto.
 
-## Compilación
-~~~
-mvn clean compile -DskipTests
-~~~
+## Instalación y Ejecución
 
-## Ejecución (línea de comandos)
-
-### Opción A — Maven Exec Plugin (recomendada)
-~~~
-mvn exec:java -Dexec.mainClass=com.mycompany.mavenproject3.Main
-~~~
-Si en el `pom.xml` ya configuraste `<mainClass>`, basta con:
-~~~
-mvn exec:java
-~~~
-
-### Opción B — Desde IDE
-- **NetBeans**: clic derecho sobre `Main.java` → **Run File**  
-  (o **Project Properties → Run → Main Class** y setea `com.mycompany.mavenproject3.Main`).
-- **IntelliJ/VS Code**: abre `Main.java` y ejecuta la clase `Main` (botón ▶).
-
-## Uso (menú principal)
-Al iniciar, verás un menú similar a:
-~~~
-1) Registrar estudiante
-2) Crear trámite de postulación
-3) Subir documento a trámite
-4) Ver estado de trámite
-5) Listar convenios y trámites
-6) Configurar requisitos de un convenio
-0) Salir
-~~~
-
-### Tipos de documento (según `TipoDocumento`)
-~~~
-CERT_NACIMIENTO, CERT_ALUMNO_REGULAR, PASAPORTE, CERTIFICADO_NOTAS,
-CARTA_MOTIVACION, CV, CERTIFICADO_IDIOMA
-~~~
-
-### Estados de trámite (referencia)
-~~~
-EN_PROCESO, COMPLETO
-~~~
-
-## Problemas comunes y soluciones
-
-**1) Error: `Could not find or load main class com.mycompany.mavenproject3.Main`**  
-- **Causa:** Ruta/paquete no coincide con la estructura real, o `exec-maven-plugin` no apunta a la clase correcta.  
-- **Solución:**
-  - Verifica que el **package** en `Main.java` sea exactamente `package com.mycompany.mavenproject3;`
-  - Verifica la carpeta: `src/main/java/com/mycompany/intercambioEstudiantil/Main.java`
-  - Ejecuta:
-    ~~~
-    mvn -q -Dexec.cleanupDaemonThreads=false exec:java -Dexec.mainClass=com.mycompany.mavenproject3.Main
-    ~~~
-
-**2) `mvn` o `java` no reconocidos**  
-- **Solución:** Asegúrate de tener **JAVA_HOME** y **Maven** en el `PATH`. Reinicia la terminal tras instalar.
-
-**3) Caracteres raros (tildes/ñ) en Windows**  
-- **PowerShell:**
-  ~~~powershell
-  chcp 65001
-  $env:JAVA_TOOL_OPTIONS=" -Dfile.encoding=UTF-8"
-  ~~~
-
-## Licencia
-Proyecto académico/MVP para fines educativos.
+1. Clona este repositorio en tu máquina local.
+2. Abre una terminal y navega hasta el directorio principal del proyecto Maven (`30.-Proyecto-SIA--main/mavenproject1/`).
+3. Compila el proyecto ejecutando:
+   ```bash
+   mvn clean install
+   ```
+4. Para iniciar la aplicación, ejecuta la clase `Main.java` (para la interfaz gráfica) o la clase `ConsoleApp.java` (para interactuar mediante la terminal).
