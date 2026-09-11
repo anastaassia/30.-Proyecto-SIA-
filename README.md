@@ -1,47 +1,107 @@
-# Proyecto SIA - Sistema de Gestión de Intercambio Estudiantil
+# Sistema de Gestión de Programas de Intercambio Estudiantil
 
-Este repositorio contiene el código fuente del **Proyecto SIA**, un sistema desarrollado en Java diseñado para administrar programas de intercambio estudiantil. La aplicación facilita el seguimiento de postulaciones, gestión de colecciones de datos y control de requisitos para estudiantes.
+Proyecto SIA — INF2236 Programación Avanzada — 2026-1
 
-## Características Principales
+Sistema que gestiona las postulaciones de estudiantes a convenios de intercambio
+académico entre universidades: registro de estudiantes, administración de
+convenios, inicio de trámites de postulación, carga de documentos de respaldo y
+validación automática de requisitos.
 
-* **Gestión de Entidades:** Administración completa de estudiantes (`Estudiante.java`), convenios institucionales (`Convenio.java`) y trámites (`Tramite.java`).
-* **Control de Documentos:** Sistema integrado para el registro de archivos subidos (`DocumentoSubido.java`), el cual incorpora manejo de excepciones personalizadas, como `DocumentoDuplicadoException`, para proteger la integridad de las postulaciones y evitar redundancias.
-* **Interfaz Gráfica (GUI):** Incluye una aplicación visual dividida en paneles modulares (como `PanelGestionEstudiantes`, `PanelGestionConvenios`, `PanelTramites` y `PanelRequisitos`) centralizados en una `VentanaPrincipal`.
-* **Persistencia de Datos:** La información del sistema se guarda y recupera de manera local mediante archivos CSV almacenados en el directorio `data/` (`estudiantes.csv`, `convenios.csv`, `documentos.csv`, `tramites.csv`) a través del gestor `DataStore.java`.
-* **Alternativa de Consola:** El sistema también cuenta con una interfaz de línea de comandos a través de `ConsoleApp.java`.
+---
 
-## Estructura del Proyecto
+## Requisitos
 
-El proyecto utiliza **Maven** para la gestión de dependencias y la construcción del software. La estructura de directorios es la siguiente:
+- **Oracle JDK 11 u Oracle JDK 8** (el proyecto compila con ambos)
+- **NetBeans 21 o inferior**, o Eclipse
+- Maven (viene incluido en NetBeans)
 
-```text
-30.-Proyecto-SIA--main/
-├── mavenproject1/
-│   ├── pom.xml                  # Archivo de configuración de Maven
-│   ├── data/                    # Archivos de persistencia de datos
-│   │   ├── convenios.csv        
-│   │   ├── documentos.csv      
-│   │   ├── estudiantes.csv     
-│   │   └── tramites.csv        
-│   └── src/main/java/com/mycompany/mavenproject1/
-│       ├── Main.java / ConsoleApp.java      # Puntos de ejecución
-│       ├── Control.java / DataStore.java    # Lógica de controladores y datos
-│       ├── Modelos                          # Estudiante, Convenio, Tramite, etc.
-│       ├── Excepciones                      # EstudianteNoEncontradoException, etc.
-│       └── Componentes Visuales             # VentanaPrincipal y clases Panel*.java
+---
+
+## Instalación
+
+1. Descomprimir el proyecto (o clonar el repositorio).
+2. Abrir NetBeans → **File → Open Project**.
+3. Seleccionar la carpeta **`mavenproject1`**, que es la que contiene el
+   `pom.xml`. No seleccionar la carpeta superior del repositorio.
+4. Click derecho sobre el proyecto → **Clean and Build**.
+   Debe finalizar con `BUILD SUCCESS`.
+
+---
+
+## Ejecución
+
+El sistema tiene un punto de entrada único que pregunta el modo de ejecución
+(requisito SIA-10):
+
+- Presionar el botón verde, o
+- Click derecho sobre `Lanzador.java` → **Run File**
+
+Aparece un diálogo con dos opciones:
+
+| Opción | Descripción |
+|---|---|
+| **Ventana (GUI)** | Interfaz Swing con pestañas |
+| **Consola** | Menú numerado en la ventana Output |
+
+También se puede ejecutar cada interfaz directamente con **Run File** sobre
+`Main.java` (gráfica) o `ConsoleApp.java` (consola).
+
+### Nota sobre acentos en Windows
+
+Si en la consola los acentos aparecen mal (`Postulaci�n`), ir a click derecho
+sobre el proyecto → **Properties → Run → VM Options** y escribir:
+
+```
+-Dfile.encoding=UTF-8
 ```
 
-## Requisitos Previos
+---
 
-* **Java Development Kit (JDK)** instalado en el sistema.
-* **Apache Maven** para la compilación y gestión del proyecto.
+## Datos
 
-## Instalación y Ejecución
+La persistencia usa cuatro archivos CSV en la carpeta `data/`, dentro de
+`mavenproject1`:
 
-1. Clona este repositorio en tu máquina local.
-2. Abre una terminal y navega hasta el directorio principal del proyecto Maven (`30.-Proyecto-SIA--main/mavenproject1/`).
-3. Compila el proyecto ejecutando:
-   ```bash
-   mvn clean install
-   ```
-4. Para iniciar la aplicación, ejecuta la clase `Main.java` (para la interfaz gráfica) o la clase `ConsoleApp.java` (para interactuar mediante la terminal).
+| Archivo | Contenido |
+|---|---|
+| `convenios.csv` | Convenios y sus requisitos documentales |
+| `estudiantes.csv` | Estudiantes registrados |
+| `tramites.csv` | Trámites de postulación |
+| `documentos.csv` | Documentos subidos a cada trámite |
+
+La carga es batch al iniciar la aplicación y el guardado se realiza al salir.
+
+Si la carpeta `data/` no existe, el sistema la crea automáticamente y carga un
+conjunto de datos iniciales (2 estudiantes, 2 convenios y 1 trámite) que
+permiten probar todas las funcionalidades.
+
+---
+
+## Estructura del proyecto
+
+```
+mavenproject1/
+├── pom.xml
+├── data/                     Archivos CSV de persistencia
+└── src/main/java/com/mycompany/mavenproject1/
+    ├── Lanzador.java         Punto de entrada (selector consola/ventana)
+    ├── Main.java             Ventana principal (Swing)
+    ├── ConsoleApp.java       Interfaz de consola
+    ├── Control.java          Lógica de negocio
+    ├── DataStore.java        Persistencia CSV
+    ├── Convenio.java         Modelo de dominio
+    ├── Estudiante.java
+    ├── Tramite.java
+    ├── DocumentoSubido.java
+    ├── TipoDocumento.java    Enumerado
+    ├── Panel*.java           Paneles de la interfaz gráfica
+    └── *Exception.java       Excepciones propias
+```
+
+---
+
+## Integrantes
+
+- Anastasia Perez
+- Alejandro Lanas
+- Nicolas Echeverria
