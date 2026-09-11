@@ -89,6 +89,27 @@ public class Convenio
         return Collections.unmodifiableList(tramites);  // copia defensiva inmutable
     }
 
+    // Metodos para modificar la lista de tramites desde fuera de la clase.
+    // getTramites() entrega una copia inmutable, por lo tanto NO se puede
+    // hacer convenio.getTramites().add(...) ni .removeIf(...): eso lanza
+    // UnsupportedOperationException. Toda modificacion pasa por aqui.
+
+    public void agregarTramite(Tramite t) {
+        if (t != null) {
+            tramites.add(t);
+            validarYActualizarEstado(t);
+        }
+    }
+
+    public boolean eliminarTramite(String idTramite) {
+        return tramites.removeIf(t -> t.getIdTramite().equals(idTramite));
+    }
+
+    public boolean eliminarTramitesDeEstudiante(String rut) {
+        return tramites.removeIf(t ->
+            t.getEstudiante() != null && t.getEstudiante().getRut().equals(rut));
+    }
+
     //METODOS
     // Se crea un tramite para un estudiante especifico
     public Tramite crearTramite(Estudiante estudiante) 

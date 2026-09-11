@@ -42,9 +42,9 @@ public class DataStore
         if (!Files.exists(fCon)) return;
         for (String ln : Files.readAllLines(fCon)) 
         {
-            if (ln.isBlank() || ln.startsWith("#")) continue;
+            if (ln.trim().isEmpty() || ln.startsWith("#")) continue;
             // id, nombre, universidad, pais, duracion, carrera, req1, req2 y asi
-            String[] p = ln.split(";");
+            String[] p = ln.split(";", -1);
             if (p.length < 7) continue;
 
             String id         = p[0];
@@ -55,7 +55,7 @@ public class DataStore
             String carrera    = p[5];
 
             Set<TipoDocumento> req = new HashSet<>();
-            if (!p[6].isBlank()) 
+            if (!p[6].trim().isEmpty()) 
             {
                 for (String tok : p[6].split(",")) 
                 {
@@ -72,9 +72,9 @@ public class DataStore
         if (!Files.exists(fEst)) return;
         for (String ln : Files.readAllLines(fEst)) 
         {
-            if (ln.isBlank() || ln.startsWith("#")) continue;
+            if (ln.trim().isEmpty() || ln.startsWith("#")) continue;
             // rut, nombre, carrera, anio, estado, idConvenioActual(no es obligatorio)
-            String[] p = ln.split(";");
+            String[] p = ln.split(";", -1);
             if (p.length < 6) continue;
 
             String rut     = p[0];
@@ -89,7 +89,7 @@ public class DataStore
             if (e != null) 
             {
                 e.setEstadoProceso(estado);
-                if (!idConv.isBlank()) 
+                if (!idConv.trim().isEmpty()) 
                 {
                     Convenio c = control.buscarConvenio(idConv);
                     if (c != null) e.setConvenio(c);
@@ -105,9 +105,9 @@ public class DataStore
         Map<String, Tramite> idx = new HashMap<>();
         for (String ln : Files.readAllLines(fTra)) 
         {
-            if (ln.isBlank() || ln.startsWith("#")) continue;
+            if (ln.trim().isEmpty() || ln.startsWith("#")) continue;
             // idTramite;idConvenio;rut;estado
-            String[] p = ln.split(";");
+            String[] p = ln.split(";", -1);
             if (p.length < 4) continue;
 
             String idT = p[0];
@@ -121,7 +121,7 @@ public class DataStore
 
             Tramite t = new Tramite(idT, e);
             if ("COMPLETO".equalsIgnoreCase(est)) t.setEstado(Tramite.Estado.COMPLETO);
-            c.getTramites().add(t);
+            c.agregarTramite(t);
             idx.put(idT, t);
         }
 
@@ -129,9 +129,9 @@ public class DataStore
         {
             for (String ln : Files.readAllLines(fDoc)) 
             {
-                if (ln.isBlank() || ln.startsWith("#")) continue;
+                if (ln.trim().isEmpty() || ln.startsWith("#")) continue;
                 // idTramite, tipo, nombreArchivo, fecha
-                String[] p = ln.split(";");
+                String[] p = ln.split(";", -1);
                 if (p.length < 4) continue;
 
                 Tramite t = idx.get(p[0]);

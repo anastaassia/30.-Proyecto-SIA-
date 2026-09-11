@@ -9,6 +9,18 @@ public class ConsoleApp {
     private static DataStore dataStore = new DataStore(control);
     private static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Repite un texto n veces.
+     * Reemplaza a String.repeat(int), que solo existe desde Java 11.
+     */
+    private static String repetir(String texto, int veces) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < veces; i++) {
+            sb.append(texto);
+        }
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
         System.out.println("============================================================");
         System.out.println("  SISTEMA DE INTERCAMBIO ESTUDIANTIL - CONSOLA COMPLETA");
@@ -140,14 +152,14 @@ public class ConsoleApp {
 
     private static void listarEstudiantes() {
         System.out.println("\n--- LISTA DE ESTUDIANTES ---");
-        var estudiantes = control.getEstudiantes();
+        Collection<Estudiante> estudiantes = control.getEstudiantes();
         if (estudiantes.isEmpty()) {
             System.out.println("No hay estudiantes.");
             return;
         }
         System.out.printf("%-15s | %-25s | %-20s | %-4s | %-12s%n",
                 "RUT", "NOMBRE", "CARRERA", "ANO", "ESTADO");
-        System.out.println("-".repeat(85));
+        System.out.println(repetir("-", 85));
         for (Estudiante e : estudiantes) {
             System.out.printf("%-15s | %-25s | %-20s | %-4d | %-12s%n",
                     e.getRut(), truncar(e.getNombre(), 25), truncar(e.getCarrera(), 20),
@@ -168,12 +180,12 @@ public class ConsoleApp {
         String carrera = leerLinea("Nueva carrera (" + e.getCarrera() + ")");
         String anioStr = leerLinea("Nuevo año (" + e.getAnioIngreso() + ")");
         String estado = leerLinea("Nuevo estado (" + e.getEstadoProceso() + ")");
-        Integer anio = anioStr.isBlank() ? null : Integer.parseInt(anioStr);
+        Integer anio = anioStr.trim().isEmpty() ? null : Integer.parseInt(anioStr);
         boolean ok = control.editarEstudiante(rut,
-                nombre.isBlank() ? null : nombre,
-                carrera.isBlank() ? null : carrera,
+                nombre.trim().isEmpty() ? null : nombre,
+                carrera.trim().isEmpty() ? null : carrera,
                 anio,
-                estado.isBlank() ? null : estado);
+                estado.trim().isEmpty() ? null : estado);
         if (ok) {
             System.out.println("Estudiante actualizado.");
             guardar();
@@ -228,7 +240,7 @@ public class ConsoleApp {
 
     private static void listarConvenios() {
         System.out.println("\n--- LISTA DE CONVENIOS ---");
-        var convenios = control.getConvenios();
+        List<Convenio> convenios = control.getConvenios();
         if (convenios.isEmpty()) {
             System.out.println("No hay convenios.");
             return;
@@ -261,11 +273,11 @@ public class ConsoleApp {
         String duracion = leerLinea("Nueva duracion (" + c.getDuracion() + ")");
         String carrera = leerLinea("Nueva carrera (" + c.getCarreraAsociada() + ")");
         boolean ok = control.editarConvenio(id,
-                nombre.isBlank() ? null : nombre,
-                uni.isBlank() ? null : uni,
-                pais.isBlank() ? null : pais,
-                duracion.isBlank() ? null : duracion,
-                carrera.isBlank() ? null : carrera);
+                nombre.trim().isEmpty() ? null : nombre,
+                uni.trim().isEmpty() ? null : uni,
+                pais.trim().isEmpty() ? null : pais,
+                duracion.trim().isEmpty() ? null : duracion,
+                carrera.trim().isEmpty() ? null : carrera);
         if (ok) {
             System.out.println("Convenio actualizado.");
             guardar();
@@ -395,7 +407,7 @@ public class ConsoleApp {
         System.out.println("Estado actual: " + t.getEstado());
         String nuevoEstadoStr = leerLinea("Nuevo estado (EN_PROCESO/COMPLETO) [ENTER para mantener]");
         Tramite.Estado nuevoEstado = null;
-        if (!nuevoEstadoStr.isBlank()) {
+        if (!nuevoEstadoStr.trim().isEmpty()) {
             try {
                 nuevoEstado = Tramite.Estado.valueOf(nuevoEstadoStr.toUpperCase());
             } catch (IllegalArgumentException e) {
@@ -403,7 +415,7 @@ public class ConsoleApp {
             }
         }
         String nuevoRut = leerLinea("Nuevo RUT de estudiante [ENTER para mantener]");
-        if (nuevoRut.isBlank()) nuevoRut = null;
+        if (nuevoRut.trim().isEmpty()) nuevoRut = null;
         boolean ok = control.editarTramite(idConv, idTram, nuevoEstado, nuevoRut);
         if (ok) {
             System.out.println("Tramite actualizado.");
@@ -524,7 +536,7 @@ public class ConsoleApp {
         int nivel = leerInt("Nivel");
         String texto = leerLinea("Texto a buscar");
         if (nivel == 1) {
-            var resultados = control.buscarEstudiantesPorNombre(texto);
+            List<Estudiante> resultados = control.buscarEstudiantesPorNombre(texto);
             if (resultados.isEmpty()) System.out.println("No se encontraron estudiantes.");
             else {
                 System.out.println("Estudiantes encontrados:");
@@ -532,7 +544,7 @@ public class ConsoleApp {
                     System.out.println("  " + e.getRut() + " - " + e.getNombre() + " (" + e.getCarrera() + ")");
             }
         } else if (nivel == 2) {
-            var resultados = control.buscarConveniosPorId(texto);
+            List<Convenio> resultados = control.buscarConveniosPorId(texto);
             if (resultados.isEmpty()) System.out.println("No se encontraron convenios.");
             else {
                 System.out.println("Convenios encontrados:");
@@ -540,7 +552,7 @@ public class ConsoleApp {
                     System.out.println("  " + c.getIdConvenio() + " - " + c.getNombre() + " (" + c.getPais() + ")");
             }
         } else if (nivel == 3) {
-            var resultados = control.buscarTramitesPorTexto(texto);
+            List<Tramite> resultados = control.buscarTramitesPorTexto(texto);
             if (resultados.isEmpty()) System.out.println("No se encontraron tramites.");
             else {
                 System.out.println("Tramites encontrados:");
@@ -574,7 +586,7 @@ public class ConsoleApp {
     private static void exportarDatos() {
         System.out.println("\n--- EXPORTAR DATOS A TXT ---");
         String nombreArchivo = leerLinea("Nombre del archivo (ej: export.txt)");
-        if (nombreArchivo.isBlank()) nombreArchivo = "export.txt";
+        if (nombreArchivo.trim().isEmpty()) nombreArchivo = "export.txt";
         File destino = new File(nombreArchivo);
         try (Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destino), "UTF-8"))) {
             w.write("=== CONVENIOS ===\n");
@@ -616,7 +628,7 @@ public class ConsoleApp {
 
     // ==================== UTILIDADES ====================
     private static boolean validarRUT(String rut) {
-        if (rut == null || rut.isBlank()) return false;
+        if (rut == null || rut.trim().isEmpty()) return false;
         String patron = "^\\d{1,2}\\.?\\d{3}\\.?\\d{3}-[\\dkK]$";
         if (!rut.matches(patron)) return false;
         String rutLimpio = rut.replaceAll("[^\\dkK]", "");

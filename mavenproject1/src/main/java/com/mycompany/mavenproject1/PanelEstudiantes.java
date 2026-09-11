@@ -157,7 +157,7 @@ public class PanelEstudiantes extends JPanel
     }
         
     private boolean validarFormatoRUT(String rut) {
-        if (rut == null || rut.isBlank()) return false;
+        if (rut == null || rut.trim().isEmpty()) return false;
 
         String patron = "^\\d{1,2}\\.?\\d{3}\\.?\\d{3}-[\\dkK]$";
 

@@ -139,7 +139,7 @@ public class PanelTramites extends JPanel {
                 }
 
                 tramite = new Tramite(idManual, estudiante, convenio);
-                convenio.getTramites().add(tramite);
+                convenio.agregarTramite(tramite);
             } else {
                 tramite = convenio.crearTramite(estudiante); // ID automático
             }

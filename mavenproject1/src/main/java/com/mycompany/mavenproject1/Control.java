@@ -12,7 +12,7 @@ public class Control
     //GETTER Y SETTER
     public List<Convenio> getConvenios() 
     {
-        return List.copyOf(convenios);
+        return Collections.unmodifiableList(new ArrayList<>(convenios));
     }
     
     public Collection<Estudiante> getEstudiantes() 
@@ -77,7 +77,7 @@ public class Control
         if (c == null || e == null) return false;
 
         Tramite t = c.crearTramite(e); 
-        if (idTramiteOpcional != null && !idTramiteOpcional.isBlank()) {
+        if (idTramiteOpcional != null && !idTramiteOpcional.trim().isEmpty()) {
             t.setIdTramite(idTramiteOpcional);
         }
         // recalculamos estado por si hay requisitos
@@ -99,7 +99,7 @@ public class Control
         Tramite t = buscarTramite(idConvenio, idTramite);
         if (t == null) return false;
 
-        if (nuevoRutEstudiante != null && !nuevoRutEstudiante.isBlank()) {
+        if (nuevoRutEstudiante != null && !nuevoRutEstudiante.trim().isEmpty()) {
             Estudiante nuevo = buscarEstudiante(nuevoRutEstudiante);
             if (nuevo == null) return false;
             t.setEstudiante(nuevo);
@@ -115,7 +115,7 @@ public class Control
     public boolean eliminarTramite(String idConvenio, String idTramite) {
         Convenio c = buscarConvenio(idConvenio);
         if (c == null) return false;
-        return c.getTramites().removeIf(x -> x.getIdTramite().equals(idTramite));
+        return c.eliminarTramite(idTramite);
     }
 
     // Acciones de documentos dentro del trámite
@@ -204,11 +204,11 @@ public class Control
                                   String nuevaCarrera) {
         Convenio c = buscarConvenio(id);
         if (c == null) return false;
-        if (nuevoNombre != null && !nuevoNombre.isBlank())      c.setNombre(nuevoNombre);
-        if (nuevaUniversidad != null && !nuevaUniversidad.isBlank()) c.setUniversidadSocia(nuevaUniversidad);
-        if (nuevoPais != null && !nuevoPais.isBlank())           c.setPais(nuevoPais);
-        if (nuevaDuracion != null && !nuevaDuracion.isBlank())   c.setDuracion(nuevaDuracion);
-        if (nuevaCarrera != null && !nuevaCarrera.isBlank())     c.setCarreraAsociada(nuevaCarrera);
+        if (nuevoNombre != null && !nuevoNombre.trim().isEmpty())      c.setNombre(nuevoNombre);
+        if (nuevaUniversidad != null && !nuevaUniversidad.trim().isEmpty()) c.setUniversidadSocia(nuevaUniversidad);
+        if (nuevoPais != null && !nuevoPais.trim().isEmpty())           c.setPais(nuevoPais);
+        if (nuevaDuracion != null && !nuevaDuracion.trim().isEmpty())   c.setDuracion(nuevaDuracion);
+        if (nuevaCarrera != null && !nuevaCarrera.trim().isEmpty())     c.setCarreraAsociada(nuevaCarrera);
         return true;
     }
 
@@ -345,16 +345,16 @@ public class Control
     Estudiante e = buscarEstudiante(rut);
     if (e == null) return false;
     
-    if (nuevoNombre != null && !nuevoNombre.isBlank()) {
+    if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
         e.setNombre(nuevoNombre);
     }
-    if (nuevaCarrera != null && !nuevaCarrera.isBlank()) {
+    if (nuevaCarrera != null && !nuevaCarrera.trim().isEmpty()) {
         e.setCarrera(nuevaCarrera);
     }
     if (nuevoAnio != null && nuevoAnio > 0) {
         e.setAnioIngreso(nuevoAnio);
     }
-    if (nuevoEstado != null && !nuevoEstado.isBlank()) {
+    if (nuevoEstado != null && !nuevoEstado.trim().isEmpty()) {
         e.setEstadoProceso(nuevoEstado);
     }
     return true;
@@ -372,10 +372,7 @@ public class Control
 
         // Eliminar de todos los trámites
         for (Convenio c : getConvenios()) {
-            c.getTramites().removeIf(t -> 
-                t.getEstudiante() != null && 
-                t.getEstudiante().getRut().equals(rut)
-            );
+            c.eliminarTramitesDeEstudiante(rut);
         }
 
         // Eliminar del mapa

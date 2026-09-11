@@ -186,11 +186,11 @@ public class PanelGestionConvenios extends JPanel
                 return;
             }
 
-            String nom = txtNombre.getText().trim(); if (nom.isBlank()) nom = null;
-            String uni = txtUni.getText().trim(); if (uni.isBlank()) uni = null;
-            String pais = txtPais.getText().trim(); if (pais.isBlank()) pais = null;
-            String dur = txtDur.getText().trim(); if (dur.isBlank()) dur = null;
-            String car = txtCarr.getText().trim(); if (car.isBlank()) car = null;
+            String nom = txtNombre.getText().trim(); if (nom.trim().isEmpty()) nom = null;
+            String uni = txtUni.getText().trim(); if (uni.trim().isEmpty()) uni = null;
+            String pais = txtPais.getText().trim(); if (pais.trim().isEmpty()) pais = null;
+            String dur = txtDur.getText().trim(); if (dur.trim().isEmpty()) dur = null;
+            String car = txtCarr.getText().trim(); if (car.trim().isEmpty()) car = null;
 
             boolean ok = herramientas.editarConvenio(id, nom, uni, pais, dur, car);
             JOptionPane.showMessageDialog(this, ok ? "Convenio actualizado." : "No se pudo actualizar.", "Información", JOptionPane.INFORMATION_MESSAGE);

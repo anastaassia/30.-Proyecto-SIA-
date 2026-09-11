@@ -405,7 +405,7 @@ public class Main extends JFrame
     */
     private boolean validarFormatoRUT(String rut) 
     {
-        if (rut == null || rut.isBlank()) return false;
+        if (rut == null || rut.trim().isEmpty()) return false;
 
         // Patrón: 11.111.111-1 o 11111111-1
         String patron = "^\\d{1,2}\\.?\\d{3}\\.?\\d{3}-[\\dkK]$";

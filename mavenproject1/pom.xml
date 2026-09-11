@@ -7,8 +7,10 @@
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>26</maven.compiler.release>
-        <!-- Aquí está el cambio. Ahora apunta a tu clase Main -->
-        <exec.mainClass>com.mycompany.mavenproject1.Main</exec.mainClass>
+        <!-- Java 8: compatible con JDK 8 y JDK 11 (lo que exige la pauta).
+             NO usar maven.compiler.release: esa propiedad no existe en JDK 8. -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <exec.mainClass>com.mycompany.mavenproject1.Lanzador</exec.mainClass>
     </properties>
 </project>
