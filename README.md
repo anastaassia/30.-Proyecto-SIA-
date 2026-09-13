@@ -102,6 +102,6 @@ mavenproject1/
 
 ## Integrantes
 
-- Anastasia Perez
+- Anastasia Acuña
 - Alejandro Lanas
 - Nicolas Echeverria
