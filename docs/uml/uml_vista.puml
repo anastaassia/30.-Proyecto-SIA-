@@ -1,0 +1,290 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam classFontSize 13
+skinparam classAttributeFontSize 11
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 50
+hide empty members
+title Sistema de Gestión de Intercambio Estudiantil — Interfaces (consola y ventanas)
+package mavenproject1 {
+class Lanzador {
+  -Lanzador()
+  +{static} main(String[]) : void
+  -{static} cargarDatos(Control, DataStore) : void
+  -{static} aplicarAspecto() : void
+}
+}
+
+package "vista.consola" {
+class ConsoleApp {
+  -control : Control
+  -dataStore : DataStore
+  -entrada : Scanner
+  --
+  +ConsoleApp(Control, DataStore)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getDataStore() : DataStore
+  +setDataStore(DataStore) : void
+  +iniciar() : void
+  -menuEstudiantes() : void
+  -agregarEstudiante() : void
+  -mostrarEstudiantes(List<Estudiante>) : void
+  -editarEstudiante() : void
+  -eliminarEstudiante() : void
+  -menuConvenios() : void
+  -agregarConvenio() : void
+  -mostrarConvenios(List<Convenio>) : void
+  -editarConvenio() : void
+  -eliminarConvenio() : void
+  -elegirRequisitos(Set<TipoDocumento>) : Set<TipoDocumento>
+  -menuTramites() : void
+  -crearTramite() : void
+  -listarTramites() : void
+  -mostrarTramites(List<Tramite>) : void
+  -verDetalleTramite() : void
+  -editarTramite() : void
+  -eliminarTramite() : void
+  -subirDocumento() : void
+  -quitarDocumento() : void
+  -menuReportes() : void
+  -exportarExcel() : void
+  -guardar() : void
+  -restaurarDatosEjemplo() : void
+  -mostrarAdvertenciasDeCarga() : void
+  -leerTexto(String) : String
+  -leerConDefecto(String, String) : String
+  -leerEntero(String) : int
+  -leerOpcion(int) : int
+  -confirmar(String) : boolean
+  -elegir(String, List<T>, T) : <T> T
+  -error(Exception) : void
+  -{static} linea(int) : String
+  -{static} recortar(String, int) : String
+}
+class "ConsoleApp.EntradaCerradaException" as ConsoleApp_EntradaCerradaException {
+  -EntradaCerradaException()
+}
+}
+ConsoleApp +-- ConsoleApp_EntradaCerradaException
+package "vista.ventana" {
+class DialogoConvenio {
+  -control : Control
+  -convenio : Convenio
+  -guardado : boolean
+  -txtId : JTextField
+  -txtNombre : JTextField
+  -txtUniversidad : JTextField
+  -txtPais : JTextField
+  -spnMeses : JSpinner
+  -txtCarrera : JTextField
+  -checks : Map<TipoDocumento, JCheckBox>
+  --
+  +DialogoConvenio(Window, Control, Convenio)
+  -requisitosMarcados() : Set<TipoDocumento>
+  -guardar() : void
+  +isGuardado() : boolean
+  +getConvenio() : Convenio
+  +getControl() : Control
+  +setControl(Control) : void
+}
+class DialogoEstudiante {
+  -control : Control
+  -estudiante : Estudiante
+  -guardado : boolean
+  -txtRut : JTextField
+  -txtNombre : JTextField
+  -txtCarrera : JTextField
+  -spnAnio : JSpinner
+  -cmbEstado : JComboBox<EstadoProceso>
+  --
+  +DialogoEstudiante(Window, Control, Estudiante)
+  ~{static} agregarFila(JPanel, int, String, Component) : void
+  -guardar() : void
+  +isGuardado() : boolean
+  +getEstudiante() : Estudiante
+  +getControl() : Control
+  +setControl(Control) : void
+}
+class GraficoBarras {
+  -{static} COLORES : Color[]
+  -control : Control
+  --
+  +GraficoBarras(Control)
+  +getControl() : Control
+  +setControl(Control) : void
+  #paintComponent(Graphics) : void
+}
+abstract class PanelBase {
+  -control : Control
+  -alCambiarDatos : Runnable
+  --
+  #PanelBase(Control, String, String)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getAlCambiarDatos() : Runnable
+  +setAlCambiarDatos(Runnable) : void
+  +{abstract} actualizar() : void
+  #notificarCambio() : void
+  #{static} crearModelo(String...) : DefaultTableModel
+  #{static} crearTabla(DefaultTableModel) : JTable
+  #{static} claveSeleccionada(JTable) : String
+  #{static} seleccionarClave(JTable, String) : void
+  #{static} crearBoton(String, ActionListener) : JButton
+  #{static} crearBarra() : JPanel
+  #{static} crearBuscador(Runnable) : JTextField
+  #mostrarError(Exception) : void
+  #mostrarAviso(String) : void
+  #mostrarInfo(String) : void
+  #confirmar(String) : boolean
+}
+class PanelConvenios {
+  -modelo : DefaultTableModel
+  -tabla : JTable
+  -txtBuscar : JTextField
+  -lblTotal : JLabel
+  -txtDetalle : JTextArea
+  --
+  +PanelConvenios(Control)
+  +actualizar() : void
+  -mostrarDetalle() : void
+  +agregar() : void
+  +editarSeleccionado() : void
+  +eliminarSeleccionado() : void
+  +enfocarBusqueda() : void
+}
+class PanelEstudiantes {
+  -modelo : DefaultTableModel
+  -tabla : JTable
+  -txtBuscar : JTextField
+  -lblTotal : JLabel
+  --
+  +PanelEstudiantes(Control)
+  +actualizar() : void
+  +agregar() : void
+  +editarSeleccionado() : void
+  +eliminarSeleccionado() : void
+  +enfocarBusqueda() : void
+}
+class PanelReportes {
+  -{static} TODOS : String
+  -{static} FALTANTES : String
+  -{static} AVANCE : String
+  -cmbReporte : JComboBox<String>
+  -cmbDocumento : JComboBox<TipoDocumento>
+  -cmbConvenio : JComboBox<Object>
+  -txtResultado : JTextArea
+  -grafico : GraficoBarras
+  -actualizandoCombos : boolean
+  --
+  +PanelReportes(Control)
+  +actualizar() : void
+  -generar() : void
+}
+class PanelTramites {
+  -{static} TODOS : String
+  -modelo : DefaultTableModel
+  -tabla : JTable
+  -cmbConvenio : JComboBox<Object>
+  -cmbEstado : JComboBox<Object>
+  -txtBuscar : JTextField
+  -lblTotal : JLabel
+  -modeloDocs : DefaultTableModel
+  -tablaDocs : JTable
+  -lblDetalle : JLabel
+  -lblObservacion : JLabel
+  -actualizandoFiltros : boolean
+  --
+  +PanelTramites(Control)
+  +actualizar() : void
+  -tramitesFiltrados() : List<Tramite>
+  -recargarFiltros() : void
+  -filtrosCambiaron() : void
+  -tramiteSeleccionado() : Tramite
+  -mostrarDetalle() : void
+  +crear() : void
+  +editarSeleccionado() : void
+  +eliminarSeleccionado() : void
+  +subirDocumento() : void
+  +quitarDocumento() : void
+  +enfocarBusqueda() : void
+}
+class "PanelTramites.RenderEstado" as PanelTramites_RenderEstado {
+  -RenderEstado()
+  +getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int) : Component
+  -{static} colorPara(String) : Color
+}
+class VentanaPrincipal {
+  ~{static} ESTUDIANTES : String
+  ~{static} CONVENIOS : String
+  ~{static} TRAMITES : String
+  ~{static} REPORTES : String
+  -control : Control
+  -dataStore : DataStore
+  -tarjetas : CardLayout
+  -contenido : JPanel
+  -paneles : Map<String, PanelBase>
+  -botonesNavegacion : Map<String, JToggleButton>
+  -lblEstado : JLabel
+  -panelEstudiantes : PanelEstudiantes
+  -panelConvenios : PanelConvenios
+  -panelTramites : PanelTramites
+  --
+  +VentanaPrincipal(Control, DataStore)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getDataStore() : DataStore
+  +setDataStore(DataStore) : void
+  -crearMenu() : JMenuBar
+  -{static} item(String, ActionListener) : JMenuItem
+  -crearNavegacion() : JPanel
+  +mostrar(String) : void
+  -actualizarBarraEstado() : void
+  +mostrarAdvertenciasDeCarga() : void
+  -guardarAhora() : void
+  -exportarExcel() : void
+  -restaurarDatosEjemplo() : void
+  -salir() : void
+}
+}
+PanelTramites +-- PanelTramites_RenderEstado
+class JFrame <<Java>>
+class JPanel <<Java>>
+class JDialog <<Java>>
+
+package "control / persistencia / reportes" as otros {
+  class Control
+  class DataStore
+  class Reporte
+}
+VentanaPrincipal --> Control
+VentanaPrincipal --> DataStore
+ConsoleApp --> Control
+ConsoleApp --> DataStore
+PanelBase --> Control
+PanelReportes ..> Reporte
+Lanzador ..> Control
+Lanzador ..> DataStore
+
+
+JFrame <|-- VentanaPrincipal
+JPanel <|-- PanelBase
+JPanel <|-- GraficoBarras
+JDialog <|-- DialogoEstudiante
+JDialog <|-- DialogoConvenio
+PanelBase <|-- PanelEstudiantes
+PanelBase <|-- PanelConvenios
+PanelBase <|-- PanelTramites
+PanelBase <|-- PanelReportes
+VentanaPrincipal "1" *-- "4" PanelBase : paneles
+PanelReportes *-- GraficoBarras
+PanelEstudiantes ..> DialogoEstudiante
+PanelConvenios ..> DialogoConvenio
+PanelTramites ..> DialogoEstudiante
+Lanzador ..> VentanaPrincipal
+Lanzador ..> ConsoleApp
+
+@enduml

@@ -1,1 +1,16 @@
-a7810479-c3c4-4c31-a357-d48465ad4cc8;CERT_NACIMIENTO;cert_nacimiento_ejemplo.pdf;2026-09-03
+idTramite;tipoDocumento;nombreArchivo;fechaSubida
+T-0001;PASAPORTE;pasaporte_crojas.pdf;2026-08-10
+T-0001;CERTIFICADO_NOTAS;notas_crojas.pdf;2026-08-10
+T-0001;CARTA_MOTIVACION;carta_crojas.pdf;2026-08-12
+T-0002;PASAPORTE;pasaporte_mgonzalez.pdf;2026-08-15
+T-0002;CERTIFICADO_NOTAS;notas_mgonzalez.pdf;2026-08-15
+T-0003;PASAPORTE;pasaporte_bsilva.pdf;2026-08-11
+T-0003;CERTIFICADO_NOTAS;notas_bsilva.pdf;2026-08-11
+T-0004;PASAPORTE;pasaporte_cfuentes.pdf;2026-08-13
+T-0004;CERTIFICADO_NOTAS;notas_cfuentes.pdf;2026-08-13
+T-0004;CV;cv_cfuentes.pdf;2026-08-14
+T-0004;CERTIFICADO_IDIOMA;goethe_b2_cfuentes.pdf;2026-08-14
+T-0005;CERTIFICADO_NOTAS;notas_vmunoz.pdf;2026-08-17
+T-0006;CERT_ALUMNO_REGULAR;alumno_regular_dmorales.pdf;2026-08-10
+T-0006;PASAPORTE;pasaporte_dmorales.pdf;2026-08-10
+T-0006;CERTIFICADO_IDIOMA;delf_b1_dmorales.pdf;2026-08-10

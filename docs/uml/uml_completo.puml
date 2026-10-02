@@ -1,0 +1,624 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam classFontSize 13
+skinparam classAttributeFontSize 11
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 50
+hide empty members
+title Sistema de Gestión de Intercambio Estudiantil — Diagrama de clases completo
+package mavenproject1 {
+class Lanzador {
+  -Lanzador()
+  +{static} main(String[]) : void
+  -{static} cargarDatos(Control, DataStore) : void
+  -{static} aplicarAspecto() : void
+}
+}
+
+package modelo {
+class Convenio {
+  -idConvenio : String
+  -nombre : String
+  -universidadSocia : String
+  -pais : String
+  -duracionMeses : int
+  -carreraAsociada : String
+  -requisitos : Set<TipoDocumento>
+  -tramites : List<Tramite>
+  --
+  +Convenio(String, String, String, String, int, String, Set<TipoDocumento>)
+  +getIdConvenio() : String
+  +setIdConvenio(String) : void
+  +getNombre() : String
+  +setNombre(String) : void
+  +getUniversidadSocia() : String
+  +setUniversidadSocia(String) : void
+  +getPais() : String
+  +setPais(String) : void
+  +getDuracionMeses() : int
+  +setDuracionMeses(int) : void
+  +getCarreraAsociada() : String
+  +setCarreraAsociada(String) : void
+  +getRequisitos() : Set<TipoDocumento>
+  +setRequisitos(Set<TipoDocumento>) : void
+  +getTramites() : List<Tramite>
+  +setTramites(List<Tramite>) : void
+  +agregarRequisito(TipoDocumento) : void
+  +quitarRequisito(TipoDocumento) : void
+  -actualizarEstadoTramites() : void
+  +agregarTramite(Tramite) : void
+  +buscarTramite(String) : Tramite
+  +eliminarTramite(String) : boolean
+  +eliminarTramitesDeEstudiante(String) : int
+  +tieneTramiteActivo(String) : boolean
+  +contarTramites(EstadoTramite) : int
+  +equals(Object) : boolean
+  +hashCode() : int
+  +toString() : String
+}
+class DocumentoSubido {
+  -tipo : TipoDocumento
+  -nombreArchivo : String
+  -fechaSubida : LocalDate
+  --
+  +DocumentoSubido(TipoDocumento, String, LocalDate)
+  +getTipo() : TipoDocumento
+  +setTipo(TipoDocumento) : void
+  +getNombreArchivo() : String
+  +setNombreArchivo(String) : void
+  +getFechaSubida() : LocalDate
+  +setFechaSubida(LocalDate) : void
+  +toString() : String
+}
+enum EstadoProceso {
+  POSTULACION
+  ACEPTADO
+  RECHAZADO
+  EN_CURSO
+  --
+  -etiqueta : String
+  --
+  +getEtiqueta() : String
+  +toString() : String
+}
+enum EstadoTramite {
+  EN_PROCESO
+  COMPLETO
+  APROBADO
+  RECHAZADO
+  --
+  -etiqueta : String
+  --
+  +getEtiqueta() : String
+  +esResuelto() : boolean
+  +toString() : String
+}
+class Estudiante {
+  -rut : String
+  -nombre : String
+  -carrera : String
+  -anioIngreso : int
+  -estadoProceso : EstadoProceso
+  --
+  +Estudiante(String, String, String, int)
+  +getRut() : String
+  +setRut(String) : void
+  +getNombre() : String
+  +setNombre(String) : void
+  +getCarrera() : String
+  +setCarrera(String) : void
+  +getAnioIngreso() : int
+  +setAnioIngreso(int) : void
+  +getEstadoProceso() : EstadoProceso
+  +setEstadoProceso(EstadoProceso) : void
+  +equals(Object) : boolean
+  +hashCode() : int
+  +toString() : String
+}
+enum TipoDocumento {
+  CERT_NACIMIENTO
+  CERT_ALUMNO_REGULAR
+  PASAPORTE
+  CERTIFICADO_NOTAS
+  CARTA_MOTIVACION
+  CV
+  CERTIFICADO_IDIOMA
+  --
+  -etiqueta : String
+  --
+  +getEtiqueta() : String
+  +toString() : String
+}
+class Tramite {
+  -idTramite : String
+  -estudiante : Estudiante
+  -convenio : Convenio
+  -documentos : Map<TipoDocumento, DocumentoSubido>
+  -estado : EstadoTramite
+  -observacion : String
+  --
+  +Tramite(String, Estudiante, Convenio)
+  +getIdTramite() : String
+  +setIdTramite(String) : void
+  +getEstudiante() : Estudiante
+  +setEstudiante(Estudiante) : void
+  +getConvenio() : Convenio
+  +setConvenio(Convenio) : void
+  +getDocumentos() : Map<TipoDocumento, DocumentoSubido>
+  +setDocumentos(Map<TipoDocumento, DocumentoSubido>) : void
+  +getEstado() : EstadoTramite
+  +setEstado(EstadoTramite) : void
+  +getObservacion() : String
+  +setObservacion(String) : void
+  +subirDocumento(TipoDocumento, String) : void
+  +subirDocumento(TipoDocumento, String, LocalDate) : void
+  +quitarDocumento(TipoDocumento) : boolean
+  +tieneDocumento(TipoDocumento) : boolean
+  +getDocumentosFaltantes() : Set<TipoDocumento>
+  +estaCompleto() : boolean
+  +actualizarEstado() : void
+  +cambiarEstado(EstadoTramite) : void
+  +equals(Object) : boolean
+  +hashCode() : int
+  +toString() : String
+}
+}
+
+package control {
+class Control {
+  -convenios : List<Convenio>
+  -estudiantes : Map<String, Estudiante>
+  --
+  +Control()
+  +getConvenios() : List<Convenio>
+  +setConvenios(List<Convenio>) : void
+  +getEstudiantes() : Map<String, Estudiante>
+  +setEstudiantes(Map<String, Estudiante>) : void
+  +registrarEstudiante(Estudiante) : void
+  +buscarEstudiante(String) : Estudiante
+  +listarEstudiantes() : List<Estudiante>
+  +buscarEstudiantes(String) : List<Estudiante>
+  +editarEstudiante(String, String, String, int, EstadoProceso) : void
+  +eliminarEstudiante(String) : int
+  +agregarConvenio(Convenio) : void
+  +buscarConvenio(String) : Convenio
+  -existeConvenio(String) : boolean
+  +listarConvenios() : List<Convenio>
+  +buscarConvenios(String) : List<Convenio>
+  +editarConvenio(String, String, String, String, int, String, Set<TipoDocumento>) : void
+  +eliminarConvenio(String) : int
+  +crearTramite(String, String) : Tramite
+  +agregarTramite(String, Tramite) : void
+  +buscarTramite(String) : Tramite
+  +listarTramites() : List<Tramite>
+  +listarTramites(String) : List<Tramite>
+  +listarTramites(EstadoTramite) : List<Tramite>
+  +buscarTramites(String) : List<Tramite>
+  +editarTramite(String, EstadoTramite, String) : void
+  +eliminarTramite(String) : void
+  +subirDocumento(String, TipoDocumento, String, boolean) : void
+  +quitarDocumento(String, TipoDocumento) : void
+  -sincronizarEstadoEstudiante(Estudiante) : void
+  -generarIdTramite() : String
+  -normalizarSiEsPosible(String) : String
+  +estaVacio() : boolean
+  +limpiar() : void
+  +cargarDatosIniciales() : void
+}
+class Validador {
+  +{static} ANIO_MINIMO : int
+  --
+  -Validador()
+  +{static} normalizarRut(String) : String
+  +{static} calcularDigitoVerificador(String) : char
+  +{static} textoObligatorio(String, String) : String
+  +{static} textoOpcional(String, String) : String
+  +{static} anioIngreso(int) : int
+  +{static} duracionMeses(int) : int
+  +{static} entero(String, String) : int
+}
+}
+
+package reportes {
+abstract class Reporte {
+  -titulo : String
+  --
+  #Reporte(String)
+  +getTitulo() : String
+  +setTitulo(String) : void
+  +getDescripcion() : String
+  #{abstract} generarLineas(Control) : List<String>
+  #mensajeSinResultados() : String
+  +generar(Control) : List<String>
+  +generarTexto(Control) : String
+  +toString() : String
+}
+class ReporteAvanceConvenios {
+  +ReporteAvanceConvenios()
+  +getDescripcion() : String
+  #generarLineas(Control) : List<String>
+  #mensajeSinResultados() : String
+}
+class ReporteDocumentoFaltante {
+  -tipoDocumento : TipoDocumento
+  -idConvenio : String
+  --
+  +ReporteDocumentoFaltante(TipoDocumento, String)
+  +getTipoDocumento() : TipoDocumento
+  +setTipoDocumento(TipoDocumento) : void
+  +getIdConvenio() : String
+  +setIdConvenio(String) : void
+  +getDescripcion() : String
+  #generarLineas(Control) : List<String>
+  #mensajeSinResultados() : String
+}
+}
+
+package persistencia {
+class DataStore {
+  +{static} SEPARADOR : String
+  +{static} SEPARADOR_LISTA : String
+  ~{static} CABECERA_CONVENIOS : String[]
+  ~{static} CABECERA_ESTUDIANTES : String[]
+  ~{static} CABECERA_TRAMITES : String[]
+  ~{static} CABECERA_DOCUMENTOS : String[]
+  -control : Control
+  -carpeta : Path
+  -advertencias : List<String>
+  --
+  +DataStore(Control)
+  +DataStore(Control, Path)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getCarpeta() : Path
+  +setCarpeta(Path) : void
+  +getAdvertencias() : List<String>
+  +existenArchivos() : boolean
+  -archivo(String) : Path
+  +cargar() : void
+  -ordenarAdvertencias() : void
+  -{static} numeroDeLinea(String) : int
+  -cargarConvenios() : void
+  -cargarEstudiantes() : void
+  -cargarTramites() : Map<String, EstadoTramite>
+  -cargarDocumentos() : void
+  -restaurarEstados(Map<String, EstadoTramite>) : void
+  +guardar() : void
+  -escribir(String, String[], List<String[]>) : void
+  -leer(String, String[]) : List<DataStore.Fila>
+  -advertir(DataStore.Fila, String) : void
+  -{static} convertirEnum(Class<E>, String, String) : <E extends Enum<E>> E
+}
+class "DataStore.Fila" as DataStore_Fila {
+  -archivo : String
+  -numero : int
+  -campos : String[]
+  --
+  -Fila(String, int, String[])
+  -campo(int) : String
+}
+class ExportadorExcel {
+  -control : Control
+  --
+  +ExportadorExcel(Control)
+  +getControl() : Control
+  +setControl(Control) : void
+  +exportar(Path) : void
+  -{static} fila(Object...) : List<Object>
+  -{static} hojaContentType(int) : String
+  -{static} hojaRelacion(int) : String
+  -{static} hoja(List<List<Object>>) : String
+  -{static} escaparXml(String) : String
+  -{static} agregar(ZipOutputStream, String, String) : void
+}
+}
+DataStore +-- DataStore_Fila
+package excepciones {
+class ConvenioNoEncontradoException {
+  +ConvenioNoEncontradoException(String)
+}
+class DatoInvalidoException {
+  +DatoInvalidoException(String)
+}
+class DocumentoDuplicadoException {
+  +DocumentoDuplicadoException(String)
+}
+class EstudianteNoEncontradoException {
+  +EstudianteNoEncontradoException(String)
+}
+class RegistroDuplicadoException {
+  +RegistroDuplicadoException(String)
+}
+class TramiteNoEncontradoException {
+  +TramiteNoEncontradoException(String)
+}
+}
+
+package "vista.consola" {
+class ConsoleApp {
+  -control : Control
+  -dataStore : DataStore
+  -entrada : Scanner
+  --
+  +ConsoleApp(Control, DataStore)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getDataStore() : DataStore
+  +setDataStore(DataStore) : void
+  +iniciar() : void
+  -menuEstudiantes() : void
+  -agregarEstudiante() : void
+  -mostrarEstudiantes(List<Estudiante>) : void
+  -editarEstudiante() : void
+  -eliminarEstudiante() : void
+  -menuConvenios() : void
+  -agregarConvenio() : void
+  -mostrarConvenios(List<Convenio>) : void
+  -editarConvenio() : void
+  -eliminarConvenio() : void
+  -elegirRequisitos(Set<TipoDocumento>) : Set<TipoDocumento>
+  -menuTramites() : void
+  -crearTramite() : void
+  -listarTramites() : void
+  -mostrarTramites(List<Tramite>) : void
+  -verDetalleTramite() : void
+  -editarTramite() : void
+  -eliminarTramite() : void
+  -subirDocumento() : void
+  -quitarDocumento() : void
+  -menuReportes() : void
+  -exportarExcel() : void
+  -guardar() : void
+  -restaurarDatosEjemplo() : void
+  -mostrarAdvertenciasDeCarga() : void
+  -leerTexto(String) : String
+  -leerConDefecto(String, String) : String
+  -leerEntero(String) : int
+  -leerOpcion(int) : int
+  -confirmar(String) : boolean
+  -elegir(String, List<T>, T) : <T> T
+  -error(Exception) : void
+  -{static} linea(int) : String
+  -{static} recortar(String, int) : String
+}
+class "ConsoleApp.EntradaCerradaException" as ConsoleApp_EntradaCerradaException {
+  -EntradaCerradaException()
+}
+}
+ConsoleApp +-- ConsoleApp_EntradaCerradaException
+package "vista.ventana" {
+class DialogoConvenio {
+  -control : Control
+  -convenio : Convenio
+  -guardado : boolean
+  -txtId : JTextField
+  -txtNombre : JTextField
+  -txtUniversidad : JTextField
+  -txtPais : JTextField
+  -spnMeses : JSpinner
+  -txtCarrera : JTextField
+  -checks : Map<TipoDocumento, JCheckBox>
+  --
+  +DialogoConvenio(Window, Control, Convenio)
+  -requisitosMarcados() : Set<TipoDocumento>
+  -guardar() : void
+  +isGuardado() : boolean
+  +getConvenio() : Convenio
+  +getControl() : Control
+  +setControl(Control) : void
+}
+class DialogoEstudiante {
+  -control : Control
+  -estudiante : Estudiante
+  -guardado : boolean
+  -txtRut : JTextField
+  -txtNombre : JTextField
+  -txtCarrera : JTextField
+  -spnAnio : JSpinner
+  -cmbEstado : JComboBox<EstadoProceso>
+  --
+  +DialogoEstudiante(Window, Control, Estudiante)
+  ~{static} agregarFila(JPanel, int, String, Component) : void
+  -guardar() : void
+  +isGuardado() : boolean
+  +getEstudiante() : Estudiante
+  +getControl() : Control
+  +setControl(Control) : void
+}
+class GraficoBarras {
+  -{static} COLORES : Color[]
+  -control : Control
+  --
+  +GraficoBarras(Control)
+  +getControl() : Control
+  +setControl(Control) : void
+  #paintComponent(Graphics) : void
+}
+abstract class PanelBase {
+  -control : Control
+  -alCambiarDatos : Runnable
+  --
+  #PanelBase(Control, String, String)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getAlCambiarDatos() : Runnable
+  +setAlCambiarDatos(Runnable) : void
+  +{abstract} actualizar() : void
+  #notificarCambio() : void
+  #{static} crearModelo(String...) : DefaultTableModel
+  #{static} crearTabla(DefaultTableModel) : JTable
+  #{static} claveSeleccionada(JTable) : String
+  #{static} seleccionarClave(JTable, String) : void
+  #{static} crearBoton(String, ActionListener) : JButton
+  #{static} crearBarra() : JPanel
+  #{static} crearBuscador(Runnable) : JTextField
+  #mostrarError(Exception) : void
+  #mostrarAviso(String) : void
+  #mostrarInfo(String) : void
+  #confirmar(String) : boolean
+}
+class PanelConvenios {
+  -modelo : DefaultTableModel
+  -tabla : JTable
+  -txtBuscar : JTextField
+  -lblTotal : JLabel
+  -txtDetalle : JTextArea
+  --
+  +PanelConvenios(Control)
+  +actualizar() : void
+  -mostrarDetalle() : void
+  +agregar() : void
+  +editarSeleccionado() : void
+  +eliminarSeleccionado() : void
+  +enfocarBusqueda() : void
+}
+class PanelEstudiantes {
+  -modelo : DefaultTableModel
+  -tabla : JTable
+  -txtBuscar : JTextField
+  -lblTotal : JLabel
+  --
+  +PanelEstudiantes(Control)
+  +actualizar() : void
+  +agregar() : void
+  +editarSeleccionado() : void
+  +eliminarSeleccionado() : void
+  +enfocarBusqueda() : void
+}
+class PanelReportes {
+  -{static} TODOS : String
+  -{static} FALTANTES : String
+  -{static} AVANCE : String
+  -cmbReporte : JComboBox<String>
+  -cmbDocumento : JComboBox<TipoDocumento>
+  -cmbConvenio : JComboBox<Object>
+  -txtResultado : JTextArea
+  -grafico : GraficoBarras
+  -actualizandoCombos : boolean
+  --
+  +PanelReportes(Control)
+  +actualizar() : void
+  -generar() : void
+}
+class PanelTramites {
+  -{static} TODOS : String
+  -modelo : DefaultTableModel
+  -tabla : JTable
+  -cmbConvenio : JComboBox<Object>
+  -cmbEstado : JComboBox<Object>
+  -txtBuscar : JTextField
+  -lblTotal : JLabel
+  -modeloDocs : DefaultTableModel
+  -tablaDocs : JTable
+  -lblDetalle : JLabel
+  -lblObservacion : JLabel
+  -actualizandoFiltros : boolean
+  --
+  +PanelTramites(Control)
+  +actualizar() : void
+  -tramitesFiltrados() : List<Tramite>
+  -recargarFiltros() : void
+  -filtrosCambiaron() : void
+  -tramiteSeleccionado() : Tramite
+  -mostrarDetalle() : void
+  +crear() : void
+  +editarSeleccionado() : void
+  +eliminarSeleccionado() : void
+  +subirDocumento() : void
+  +quitarDocumento() : void
+  +enfocarBusqueda() : void
+}
+class "PanelTramites.RenderEstado" as PanelTramites_RenderEstado {
+  -RenderEstado()
+  +getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int) : Component
+  -{static} colorPara(String) : Color
+}
+class VentanaPrincipal {
+  ~{static} ESTUDIANTES : String
+  ~{static} CONVENIOS : String
+  ~{static} TRAMITES : String
+  ~{static} REPORTES : String
+  -control : Control
+  -dataStore : DataStore
+  -tarjetas : CardLayout
+  -contenido : JPanel
+  -paneles : Map<String, PanelBase>
+  -botonesNavegacion : Map<String, JToggleButton>
+  -lblEstado : JLabel
+  -panelEstudiantes : PanelEstudiantes
+  -panelConvenios : PanelConvenios
+  -panelTramites : PanelTramites
+  --
+  +VentanaPrincipal(Control, DataStore)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getDataStore() : DataStore
+  +setDataStore(DataStore) : void
+  -crearMenu() : JMenuBar
+  -{static} item(String, ActionListener) : JMenuItem
+  -crearNavegacion() : JPanel
+  +mostrar(String) : void
+  -actualizarBarraEstado() : void
+  +mostrarAdvertenciasDeCarga() : void
+  -guardarAhora() : void
+  -exportarExcel() : void
+  -restaurarDatosEjemplo() : void
+  -salir() : void
+}
+}
+PanelTramites +-- PanelTramites_RenderEstado
+class Exception <<Java>>
+class JFrame <<Java>>
+class JPanel <<Java>>
+class JDialog <<Java>>
+
+Control "1" o-- "*" Convenio : convenios (List)
+Control "1" o-- "*" Estudiante : estudiantes (HashMap por RUT)
+Convenio "1" *-- "*" Tramite : tramites (List anidada)
+Tramite "*" --> "1" Estudiante : estudiante
+Tramite "1" *-- "*" DocumentoSubido : documentos (EnumMap)
+Convenio --> "*" TipoDocumento : requisitos
+DocumentoSubido --> TipoDocumento
+Tramite --> EstadoTramite
+Estudiante --> EstadoProceso
+Control ..> Validador
+Reporte <|-- ReporteDocumentoFaltante
+Reporte <|-- ReporteAvanceConvenios
+Reporte ..> Control
+DataStore --> Control
+ExportadorExcel --> Control
+Control ..> excepciones : «throws»
+Exception <|-- excepciones
+
+
+JFrame <|-- VentanaPrincipal
+JPanel <|-- PanelBase
+JPanel <|-- GraficoBarras
+JDialog <|-- DialogoEstudiante
+JDialog <|-- DialogoConvenio
+PanelBase <|-- PanelEstudiantes
+PanelBase <|-- PanelConvenios
+PanelBase <|-- PanelTramites
+PanelBase <|-- PanelReportes
+VentanaPrincipal "1" *-- "4" PanelBase : paneles
+PanelReportes *-- GraficoBarras
+PanelEstudiantes ..> DialogoEstudiante
+PanelConvenios ..> DialogoConvenio
+PanelTramites ..> DialogoEstudiante
+Lanzador ..> VentanaPrincipal
+Lanzador ..> ConsoleApp
+
+
+VentanaPrincipal --> Control
+VentanaPrincipal --> DataStore
+ConsoleApp --> Control
+ConsoleApp --> DataStore
+PanelBase --> Control
+PanelReportes ..> Reporte
+Lanzador ..> Control
+Lanzador ..> DataStore
+
+@enduml

@@ -1,1 +1,4 @@
 /mavenproject1/target/
+/mavenproject1/data/*.tmp
+/mavenproject1/out/
+*.xlsx

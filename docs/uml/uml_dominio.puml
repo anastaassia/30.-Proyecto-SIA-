@@ -1,0 +1,351 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam classFontSize 13
+skinparam classAttributeFontSize 11
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 50
+hide empty members
+title Sistema de Gestión de Intercambio Estudiantil — Modelo, control, reportes y persistencia
+package modelo {
+class Convenio {
+  -idConvenio : String
+  -nombre : String
+  -universidadSocia : String
+  -pais : String
+  -duracionMeses : int
+  -carreraAsociada : String
+  -requisitos : Set<TipoDocumento>
+  -tramites : List<Tramite>
+  --
+  +Convenio(String, String, String, String, int, String, Set<TipoDocumento>)
+  +getIdConvenio() : String
+  +setIdConvenio(String) : void
+  +getNombre() : String
+  +setNombre(String) : void
+  +getUniversidadSocia() : String
+  +setUniversidadSocia(String) : void
+  +getPais() : String
+  +setPais(String) : void
+  +getDuracionMeses() : int
+  +setDuracionMeses(int) : void
+  +getCarreraAsociada() : String
+  +setCarreraAsociada(String) : void
+  +getRequisitos() : Set<TipoDocumento>
+  +setRequisitos(Set<TipoDocumento>) : void
+  +getTramites() : List<Tramite>
+  +setTramites(List<Tramite>) : void
+  +agregarRequisito(TipoDocumento) : void
+  +quitarRequisito(TipoDocumento) : void
+  -actualizarEstadoTramites() : void
+  +agregarTramite(Tramite) : void
+  +buscarTramite(String) : Tramite
+  +eliminarTramite(String) : boolean
+  +eliminarTramitesDeEstudiante(String) : int
+  +tieneTramiteActivo(String) : boolean
+  +contarTramites(EstadoTramite) : int
+  +equals(Object) : boolean
+  +hashCode() : int
+  +toString() : String
+}
+class DocumentoSubido {
+  -tipo : TipoDocumento
+  -nombreArchivo : String
+  -fechaSubida : LocalDate
+  --
+  +DocumentoSubido(TipoDocumento, String, LocalDate)
+  +getTipo() : TipoDocumento
+  +setTipo(TipoDocumento) : void
+  +getNombreArchivo() : String
+  +setNombreArchivo(String) : void
+  +getFechaSubida() : LocalDate
+  +setFechaSubida(LocalDate) : void
+  +toString() : String
+}
+enum EstadoProceso {
+  POSTULACION
+  ACEPTADO
+  RECHAZADO
+  EN_CURSO
+  --
+  -etiqueta : String
+  --
+  +getEtiqueta() : String
+  +toString() : String
+}
+enum EstadoTramite {
+  EN_PROCESO
+  COMPLETO
+  APROBADO
+  RECHAZADO
+  --
+  -etiqueta : String
+  --
+  +getEtiqueta() : String
+  +esResuelto() : boolean
+  +toString() : String
+}
+class Estudiante {
+  -rut : String
+  -nombre : String
+  -carrera : String
+  -anioIngreso : int
+  -estadoProceso : EstadoProceso
+  --
+  +Estudiante(String, String, String, int)
+  +getRut() : String
+  +setRut(String) : void
+  +getNombre() : String
+  +setNombre(String) : void
+  +getCarrera() : String
+  +setCarrera(String) : void
+  +getAnioIngreso() : int
+  +setAnioIngreso(int) : void
+  +getEstadoProceso() : EstadoProceso
+  +setEstadoProceso(EstadoProceso) : void
+  +equals(Object) : boolean
+  +hashCode() : int
+  +toString() : String
+}
+enum TipoDocumento {
+  CERT_NACIMIENTO
+  CERT_ALUMNO_REGULAR
+  PASAPORTE
+  CERTIFICADO_NOTAS
+  CARTA_MOTIVACION
+  CV
+  CERTIFICADO_IDIOMA
+  --
+  -etiqueta : String
+  --
+  +getEtiqueta() : String
+  +toString() : String
+}
+class Tramite {
+  -idTramite : String
+  -estudiante : Estudiante
+  -convenio : Convenio
+  -documentos : Map<TipoDocumento, DocumentoSubido>
+  -estado : EstadoTramite
+  -observacion : String
+  --
+  +Tramite(String, Estudiante, Convenio)
+  +getIdTramite() : String
+  +setIdTramite(String) : void
+  +getEstudiante() : Estudiante
+  +setEstudiante(Estudiante) : void
+  +getConvenio() : Convenio
+  +setConvenio(Convenio) : void
+  +getDocumentos() : Map<TipoDocumento, DocumentoSubido>
+  +setDocumentos(Map<TipoDocumento, DocumentoSubido>) : void
+  +getEstado() : EstadoTramite
+  +setEstado(EstadoTramite) : void
+  +getObservacion() : String
+  +setObservacion(String) : void
+  +subirDocumento(TipoDocumento, String) : void
+  +subirDocumento(TipoDocumento, String, LocalDate) : void
+  +quitarDocumento(TipoDocumento) : boolean
+  +tieneDocumento(TipoDocumento) : boolean
+  +getDocumentosFaltantes() : Set<TipoDocumento>
+  +estaCompleto() : boolean
+  +actualizarEstado() : void
+  +cambiarEstado(EstadoTramite) : void
+  +equals(Object) : boolean
+  +hashCode() : int
+  +toString() : String
+}
+}
+
+package control {
+class Control {
+  -convenios : List<Convenio>
+  -estudiantes : Map<String, Estudiante>
+  --
+  +Control()
+  +getConvenios() : List<Convenio>
+  +setConvenios(List<Convenio>) : void
+  +getEstudiantes() : Map<String, Estudiante>
+  +setEstudiantes(Map<String, Estudiante>) : void
+  +registrarEstudiante(Estudiante) : void
+  +buscarEstudiante(String) : Estudiante
+  +listarEstudiantes() : List<Estudiante>
+  +buscarEstudiantes(String) : List<Estudiante>
+  +editarEstudiante(String, String, String, int, EstadoProceso) : void
+  +eliminarEstudiante(String) : int
+  +agregarConvenio(Convenio) : void
+  +buscarConvenio(String) : Convenio
+  -existeConvenio(String) : boolean
+  +listarConvenios() : List<Convenio>
+  +buscarConvenios(String) : List<Convenio>
+  +editarConvenio(String, String, String, String, int, String, Set<TipoDocumento>) : void
+  +eliminarConvenio(String) : int
+  +crearTramite(String, String) : Tramite
+  +agregarTramite(String, Tramite) : void
+  +buscarTramite(String) : Tramite
+  +listarTramites() : List<Tramite>
+  +listarTramites(String) : List<Tramite>
+  +listarTramites(EstadoTramite) : List<Tramite>
+  +buscarTramites(String) : List<Tramite>
+  +editarTramite(String, EstadoTramite, String) : void
+  +eliminarTramite(String) : void
+  +subirDocumento(String, TipoDocumento, String, boolean) : void
+  +quitarDocumento(String, TipoDocumento) : void
+  -sincronizarEstadoEstudiante(Estudiante) : void
+  -generarIdTramite() : String
+  -normalizarSiEsPosible(String) : String
+  +estaVacio() : boolean
+  +limpiar() : void
+  +cargarDatosIniciales() : void
+}
+class Validador {
+  +{static} ANIO_MINIMO : int
+  --
+  -Validador()
+  +{static} normalizarRut(String) : String
+  +{static} calcularDigitoVerificador(String) : char
+  +{static} textoObligatorio(String, String) : String
+  +{static} textoOpcional(String, String) : String
+  +{static} anioIngreso(int) : int
+  +{static} duracionMeses(int) : int
+  +{static} entero(String, String) : int
+}
+}
+
+package reportes {
+abstract class Reporte {
+  -titulo : String
+  --
+  #Reporte(String)
+  +getTitulo() : String
+  +setTitulo(String) : void
+  +getDescripcion() : String
+  #{abstract} generarLineas(Control) : List<String>
+  #mensajeSinResultados() : String
+  +generar(Control) : List<String>
+  +generarTexto(Control) : String
+  +toString() : String
+}
+class ReporteAvanceConvenios {
+  +ReporteAvanceConvenios()
+  +getDescripcion() : String
+  #generarLineas(Control) : List<String>
+  #mensajeSinResultados() : String
+}
+class ReporteDocumentoFaltante {
+  -tipoDocumento : TipoDocumento
+  -idConvenio : String
+  --
+  +ReporteDocumentoFaltante(TipoDocumento, String)
+  +getTipoDocumento() : TipoDocumento
+  +setTipoDocumento(TipoDocumento) : void
+  +getIdConvenio() : String
+  +setIdConvenio(String) : void
+  +getDescripcion() : String
+  #generarLineas(Control) : List<String>
+  #mensajeSinResultados() : String
+}
+}
+
+package persistencia {
+class DataStore {
+  +{static} SEPARADOR : String
+  +{static} SEPARADOR_LISTA : String
+  ~{static} CABECERA_CONVENIOS : String[]
+  ~{static} CABECERA_ESTUDIANTES : String[]
+  ~{static} CABECERA_TRAMITES : String[]
+  ~{static} CABECERA_DOCUMENTOS : String[]
+  -control : Control
+  -carpeta : Path
+  -advertencias : List<String>
+  --
+  +DataStore(Control)
+  +DataStore(Control, Path)
+  +getControl() : Control
+  +setControl(Control) : void
+  +getCarpeta() : Path
+  +setCarpeta(Path) : void
+  +getAdvertencias() : List<String>
+  +existenArchivos() : boolean
+  -archivo(String) : Path
+  +cargar() : void
+  -ordenarAdvertencias() : void
+  -{static} numeroDeLinea(String) : int
+  -cargarConvenios() : void
+  -cargarEstudiantes() : void
+  -cargarTramites() : Map<String, EstadoTramite>
+  -cargarDocumentos() : void
+  -restaurarEstados(Map<String, EstadoTramite>) : void
+  +guardar() : void
+  -escribir(String, String[], List<String[]>) : void
+  -leer(String, String[]) : List<DataStore.Fila>
+  -advertir(DataStore.Fila, String) : void
+  -{static} convertirEnum(Class<E>, String, String) : <E extends Enum<E>> E
+}
+class "DataStore.Fila" as DataStore_Fila {
+  -archivo : String
+  -numero : int
+  -campos : String[]
+  --
+  -Fila(String, int, String[])
+  -campo(int) : String
+}
+class ExportadorExcel {
+  -control : Control
+  --
+  +ExportadorExcel(Control)
+  +getControl() : Control
+  +setControl(Control) : void
+  +exportar(Path) : void
+  -{static} fila(Object...) : List<Object>
+  -{static} hojaContentType(int) : String
+  -{static} hojaRelacion(int) : String
+  -{static} hoja(List<List<Object>>) : String
+  -{static} escaparXml(String) : String
+  -{static} agregar(ZipOutputStream, String, String) : void
+}
+}
+DataStore +-- DataStore_Fila
+package excepciones {
+class ConvenioNoEncontradoException {
+  +ConvenioNoEncontradoException(String)
+}
+class DatoInvalidoException {
+  +DatoInvalidoException(String)
+}
+class DocumentoDuplicadoException {
+  +DocumentoDuplicadoException(String)
+}
+class EstudianteNoEncontradoException {
+  +EstudianteNoEncontradoException(String)
+}
+class RegistroDuplicadoException {
+  +RegistroDuplicadoException(String)
+}
+class TramiteNoEncontradoException {
+  +TramiteNoEncontradoException(String)
+}
+}
+
+class Exception <<Java>>
+
+Control "1" o-- "*" Convenio : convenios (List)
+Control "1" o-- "*" Estudiante : estudiantes (HashMap por RUT)
+Convenio "1" *-- "*" Tramite : tramites (List anidada)
+Tramite "*" --> "1" Estudiante : estudiante
+Tramite "1" *-- "*" DocumentoSubido : documentos (EnumMap)
+Convenio --> "*" TipoDocumento : requisitos
+DocumentoSubido --> TipoDocumento
+Tramite --> EstadoTramite
+Estudiante --> EstadoProceso
+Control ..> Validador
+Reporte <|-- ReporteDocumentoFaltante
+Reporte <|-- ReporteAvanceConvenios
+Reporte ..> Control
+DataStore --> Control
+ExportadorExcel --> Control
+Control ..> excepciones : «throws»
+Exception <|-- excepciones
+
+@enduml

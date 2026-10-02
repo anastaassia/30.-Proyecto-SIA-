@@ -1,2 +1,6 @@
-A-2026;Convenio A;Universidad A;País A;Tres meses;Arquitectura;CERT_NACIMIENTO,CERT_ALUMNO_REGULAR
-B-2026;Convenio B;Universidad B;País B;Doce meses;Ingeniería Industrial;PASAPORTE,CERTIFICADO_NOTAS
+idConvenio;nombre;universidadSocia;pais;duracionMeses;carreraAsociada;requisitos
+ES-SAL-2026;Intercambio Salamanca;Universidad de Salamanca;España;6;Ingeniería Civil Informática;PASAPORTE,CERTIFICADO_NOTAS,CARTA_MOTIVACION
+DE-TUM-2026;Doble titulación TUM;Technische Universität München;Alemania;12;Ingeniería Civil Informática;PASAPORTE,CERTIFICADO_NOTAS,CV,CERTIFICADO_IDIOMA
+MX-UNAM-2026;Semestre en la UNAM;Universidad Nacional Autónoma de México;México;6;Arquitectura;CERT_ALUMNO_REGULAR,CERTIFICADO_NOTAS,CARTA_MOTIVACION
+FR-LYON-2026;Intercambio Lyon;Université Lumière Lyon 2;Francia;6;Ingeniería Comercial;CERT_ALUMNO_REGULAR,PASAPORTE,CERTIFICADO_IDIOMA
+AR-UBA-2026;Pasantía Buenos Aires;Universidad de Buenos Aires;Argentina;3;Psicología;CERT_NACIMIENTO,CERT_ALUMNO_REGULAR

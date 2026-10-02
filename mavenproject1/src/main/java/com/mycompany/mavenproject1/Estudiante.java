@@ -67,16 +67,16 @@ public class Estudiante
     
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Estudiante)) return false;
-        Estudiante other = (Estudiante) o;
+    public boolean equals(Object o) {   //recibimos un elemento object
+        if (this == o) return true;     //verificamos si el objetvo o existe ya en memoria o no
+        if (!(o instanceof Estudiante)) return false; //verificamos si el objeto o es instancia de estudiante
+        Estudiante other = (Estudiante) o; //se desempaqueta y castea a Estudiante
         return this.rut != null && this.rut.equals(other.rut);
     }
 
     @Override
     public int hashCode() {
-        return rut == null ? 0 : rut.hashCode();
+        return rut == null ? 0 : rut.hashCode();//Si el rut es nullo, el hashCode es 0, si no, se le asigna un hashCode
     }
 
     @Override
