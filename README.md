@@ -1,12 +1,10 @@
 # Sistema de Gestión de Programas de Intercambio Estudiantil
 
-Proyecto SIA — INF2236 Programación Avanzada — 2026-1
-Grupo 30: Anastasia Acuña · Alejandro Lanas · Nicolás Echeverría
-
-Sistema que gestiona las postulaciones de estudiantes a convenios de intercambio:
-estudiantes, convenios (con los documentos que exige cada uno), trámites de
-postulación, documentos subidos y reportes de seguimiento.
-
+Proyecto SIA — INF2236 Programación Avanzada — 2026-1 
+Grupo 30: Anastasia Acuña · Alejandro Lanas · Nicolás Echeverría 
+Sistema que gestiona las postulaciones de estudiantes a convenios de intercambio: 
+estudiantes, convenios (con los documentos que exige cada uno), trámites de postulación, 
+documentos subidos y reportes de seguimiento.
 ---
 
 ## Requisitos
